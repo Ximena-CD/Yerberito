@@ -1,0 +1,128 @@
+% --- Plantas
+planta(aconito).
+planta(adormidera).
+planta(aguacate).
+planta(ahuehuete).
+planta(ajenjo).
+
+% --- Nombres científicos
+nombre_cientifico(aconito, 'Aconitum napellus').
+nombre_cientifico(adormidera, 'Papaver somniferum').
+nombre_cientifico(aguacate, 'Persea americana').
+nombre_cientifico(ahuehuete, 'Taxodium mucronatum').
+nombre_cientifico(ajenjo, 'Artemisia absinthium').
+
+% --- Enfermedades que cura cada planta 
+cura(aconito, neuralgia).
+cura(aconito, fiebre).
+cura(aconito, reumatismo).
+
+cura(adormidera, insomnio).
+cura(adormidera, dolor).
+cura(adormidera, ansiedad).
+
+cura(aguacate, estreñimiento).
+cura(aguacate, problemas_digestivos).
+cura(aguacate, tos).
+
+cura(ahuehuete, enfermedades_respiratorias).
+cura(ahuehuete, infecciones_piel).
+
+cura(ajenjo, parásitos_intestinales).
+cura(ajenjo, problemas_digestivos).
+cura(ajenjo, debilidad_general).
+
+% --- Clasificación por tipo de enfermedad
+tipo_enfermedad(neuralgia, nerviosa).
+tipo_enfermedad(fiebre, general).
+tipo_enfermedad(reumatismo, musculoesqueletica).
+tipo_enfermedad(insomnio, nerviosa).
+tipo_enfermedad(dolor, general).
+tipo_enfermedad(ansiedad, mental).
+tipo_enfermedad(estreñimiento, digestiva).
+tipo_enfermedad(problemas_digestivos, digestiva).
+tipo_enfermedad(tos, respiratoria).
+tipo_enfermedad(enfermedades_respiratorias, respiratoria).
+tipo_enfermedad(infecciones_piel, cutanea).
+tipo_enfermedad(parásitos_intestinales, digestiva).
+tipo_enfermedad(debilidad_general, general).
+
+% --- Uso interno o externo
+uso_interno(adormidera).
+uso_interno(aguacate).
+uso_interno(ajenjo).
+uso_externo(aconito).
+uso_externo(ahuehuete).
+
+% --- Partes útiles
+parte_util(aconito, raiz).
+parte_util(adormidera, cápsula).
+parte_util(aguacate, hoja).
+parte_util(ahuehuete, corteza).
+parte_util(ajenjo, hojas).
+
+% --- Formas de uso
+forma_uso(aconito, tintura).
+forma_uso(adormidera, infusión).
+forma_uso(adormidera, extracto).
+forma_uso(aguacate, infusión).
+forma_uso(aguacate, cocimiento).
+forma_uso(ahuehuete, decocción).
+forma_uso(ajenjo, infusión).
+forma_uso(ajenjo, macerado).
+
+% --- Compatibilidad entre plantas
+compatible(aguacate, ajenjo).
+compatible(adormidera, aconito).
+
+% --- Regiones
+origen(aguacate, mexico).
+origen(ahuehuete, mexico).
+origen(adormidera, asia).
+origen(aconito, europa).
+origen(ajenjo, europa).
+
+% --- Advertencias
+precaucion(aconito, toxicidad_alta).
+precaucion(adormidera, dependencia).
+precaucion(ajenjo, embarazo).
+
+% --- Reglas
+es_util(Planta) :-
+    cura(Planta, _).
+
+es_medicinal(Planta) :-
+    uso_interno(Planta);
+    uso_externo(Planta).
+
+se_usa_para(Planta, Enfermedad, Parte, Forma) :-
+    planta(Planta),
+    cura(Planta, Enfermedad),
+    parte_util(Planta, Parte),
+    forma_uso(Planta, Forma).
+
+recomendar_para_tipo(Tipo, Planta) :-
+    tipo_enfermedad(Enfermedad, Tipo),
+    cura(Planta, Enfermedad).
+
+pueden_combinarse(P1, P2) :-
+    compatible(P1, P2);
+    compatible(P2, P1).
+
+tiene_precaucion(Planta) :-
+    precaucion(Planta, _).
+
+usos_de(Planta, Lista) :-
+    findall(Forma, forma_uso(Planta, Forma), Lista).
+
+tratamientos_de(Planta, Enfermedades) :-
+    findall(E, cura(Planta, E), Enfermedades).
+
+nombre(P, Nombre) :-
+    nombre_cientifico(P, Nombre).
+
+recomendar_planta(Enfermedad, Planta) :-
+    cura(Planta, Enfermedad).
+
+como_se_usa(Planta, Forma) :-
+    forma_uso(Planta, Forma).
